@@ -26,13 +26,15 @@ public class Principal extends JFrame {
 	private JTextField Hin;
 	private JTextField Hout;
 	private JTextField Total;
-	private JComboBox socios;
+	private JComboBox<Registro> socios;
 	private int in;
 	private int out;
 	private int resultado;
+	private int sumatorio;
 	private String Resultado;
 	private String textIn;
 	private String textOut;
+	private Registro r;
 
 	/**
 	 * Launch the application.
@@ -68,7 +70,17 @@ public class Principal extends JFrame {
 		lblSocio.setBounds(10, 11, 422, 14);
 		contentPane.add(lblSocio);
 		
-		socios = new JComboBox();
+		socios = new JComboBox<Registro>();
+		socios.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e){
+				r=(Registro) socios.getItemAt(socios.getSelectedIndex());
+				Nombre.setText(String.valueOf(r.getSocio()));
+				Hin.setText(String.valueOf(r.getHoraIn()));
+				Hout.setText(String.valueOf(r.getHoraOut()));	
+				Total.setText(String.valueOf(r.getTotal()));
+		}	
+		});
+		
 		socios.setBounds(10, 26, 422, 20);
 		contentPane.add(socios);
 		
@@ -128,11 +140,7 @@ public class Principal extends JFrame {
 					r.setSocio(String.valueOf(Nombre.getText()));
 					r.setHoraIn(Integer.valueOf(Hin.getText()));
 					r.setHoraOut(Integer.valueOf(Hout.getText()));
-					
-					socios.addItem(r);
-				}
-				//Operacion matematica
-				try{
+					//Calculo matemático:
 					textIn=Hin.getText();
 					in=Integer.parseInt(textIn);
 					
@@ -143,13 +151,11 @@ public class Principal extends JFrame {
 					
 					Resultado=String.valueOf(resultado);
 					Total.setText(Resultado);
-					}
-				catch(NumberFormatException exception)
-				{
-				JOptionPane.showMessageDialog(null, "¡ERROR!");
-				}
-			
-			
+					
+					//Almacena el calculo anterior				
+					r.setTotal(String.valueOf(Total.getText()));
+					socios.addItem(r);
+				}	
 			}
 		});
 		btnGuardar.setBounds(22, 207, 112, 23);
@@ -168,18 +174,44 @@ public class Principal extends JFrame {
 					JOptionPane.showMessageDialog(null, "¡Falta introducir hora de salida!");
 					}
 				else{
-					Registro r = new Registro(socios);
+					
 					r.setSocio(String.valueOf(Nombre.getText()));
 					r.setHoraIn(Integer.valueOf(Hin.getText()));
 					r.setHoraOut(Integer.valueOf(Hout.getText()));
 				}		
-			
+			//Hacer que el resto de la modificacion se sume al resultado anterior.
+				try{
+					textIn=Hin.getText();
+					in=Integer.parseInt(textIn);
+					
+					textOut=Hout.getText();
+					out=Integer.parseInt(textOut);
+					
+					resultado= out-in;
+					
+					Resultado=String.valueOf(resultado);
+					Total.setText(Resultado);
+					}
+				catch(NumberFormatException exception)
+				{
+				JOptionPane.showMessageDialog(null, "¡ERROR!");
+				}
 			}
 		});
 		btnModificar.setBounds(162, 203, 112, 31);
 		contentPane.add(btnModificar);
 		
 		JButton btnEliminar = new JButton("Borrar socio");
+		btnEliminar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//Ventana para confirmar eliminar:
+				if (JOptionPane.showConfirmDialog(new JFrame(), 
+						"¿Estás seguro?", "BORRAR SOCIO", 
+						JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) 
+					
+			socios.removeItem(r=socios.getItemAt(socios.getSelectedIndex()));
+		}
+		});
 		btnEliminar.setBounds(304, 207, 112, 23);
 		contentPane.add(btnEliminar);
 		

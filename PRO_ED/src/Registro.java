@@ -25,6 +25,8 @@ public class Registro {
 	public void setHoraIn(int i){HoraIn=i;}
 	public void setHoraOut(int o){HoraOut=o;}
 	public String getSocio(){return Socio;}
+	public String getTotal(){return Resultado;}
+	public void setTotal(String t){Resultado=t;}
 	public int getHoraIn(){return HoraIn;}
 	public int getHoraOut(){return HoraOut;}
 	public String toString(){return Socio;}
